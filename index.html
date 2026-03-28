@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card Show Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e11;
+    --surface: #1a1820;
+    --surface2: #221f2b;
+    --border: #2e2a3a;
+    --gold: #f5c842;
+    --gold-dim: #a88a1e;
+    --teal: #2ee8c0;
+    --red: #ff5a6e;
+    --text: #e8e4f0;
+    --muted: #7a748a;
+    --radius: 12px;
+  }
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘DM Sans’, sans-serif;
+min-height: 100vh;
+padding: 20px 16px 60px;
+}
+
+/* Header */
+.header {
+text-align: center;
+margin-bottom: 28px;
+}
+.header h1 {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: clamp(2.2rem, 8vw, 3.6rem);
+letter-spacing: 3px;
+color: var(–gold);
+line-height: 1;
+text-shadow: 0 0 30px rgba(245,200,66,0.3);
+}
+.header p {
+color: var(–muted);
+font-size: 0.85rem;
+margin-top: 6px;
+letter-spacing: 1px;
+text-transform: uppercase;
+}
+
+/* Tabs */
+.tabs {
+display: flex;
+gap: 8px;
+margin-bottom: 20px;
+background: var(–surface);
+border-radius: var(–radius);
+padding: 6px;
+border: 1px solid var(–border);
+}
+.tab {
+flex: 1;
+padding: 10px;
+border-radius: 8px;
+border: none;
+background: transparent;
+color: var(–muted);
+font-family: ‘DM Sans’, sans-serif;
+font-size: 0.9rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.2s;
+letter-spacing: 0.5px;
+}
+.tab.active {
+background: var(–gold);
+color: #0f0e11;
+}
+.tab:not(.active):hover {
+color: var(–text);
+background: var(–border);
+}
+
+/* Section label */
+.section-label {
+font-size: 0.7rem;
+text-transform: uppercase;
+letter-spacing: 2px;
+color: var(–muted);
+margin-bottom: 10px;
+}
+
+/* Card */
+.card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: var(–radius);
+padding: 16px;
+margin-bottom: 16px;
+}
+
+/* Input row */
+.input-row {
+display: grid;
+grid-template-columns: 1fr auto auto;
+gap: 8px;
+align-items: end;
+}
+
+.field label {
+display: block;
+font-size: 0.72rem;
+text-transform: uppercase;
+letter-spacing: 1px;
+color: var(–muted);
+margin-bottom: 6px;
+}
+.field input, .field select {
+width: 100%;
+background: var(–surface2);
+border: 1px solid var(–border);
+border-radius: 8px;
+padding: 10px 12px;
+color: var(–text);
+font-family: ‘DM Sans’, sans-serif;
+font-size: 0.95rem;
+outline: none;
+transition: border-color 0.2s;
+}
+.field input:focus, .field select:focus {
+border-color: var(–gold);
+}
+.field input::placeholder { color: var(–muted); }
+.field select option { background: var(–surface2); }
+
+.price-field { width: 110px; }
+.price-field input { text-align: right; }
+
+.btn-add {
+background: var(–gold);
+color: #0f0e11;
+border: none;
+border-radius: 8px;
+padding: 10px 16px;
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 1.1rem;
+letter-spacing: 1px;
+cursor: pointer;
+white-space: nowrap;
+transition: opacity 0.2s, transform 0.1s;
+align-self: end;
+}
+.btn-add:hover { opacity: 0.85; }
+.btn-add:active { transform: scale(0.97); }
+
+/* Items list */
+.items-list { display: flex; flex-direction: column; gap: 8px; }
+
+.item-row {
+display: flex;
+align-items: center;
+gap: 10px;
+background: var(–surface2);
+border-radius: 8px;
+padding: 10px 12px;
+border: 1px solid var(–border);
+animation: slideIn 0.2s ease;
+}
+@keyframes slideIn {
+from { opacity: 0; transform: translateY(-6px); }
+to { opacity: 1; transform: translateY(0); }
+}
+.item-name {
+flex: 1;
+font-size: 0.9rem;
+font-weight: 500;
+}
+.item-price {
+font-size: 0.9rem;
+color: var(–gold);
+font-weight: 600;
+min-width: 60px;
+text-align: right;
+}
+.item-type {
+font-size: 0.7rem;
+text-transform: uppercase;
+letter-spacing: 1px;
+padding: 3px 8px;
+border-radius: 20px;
+font-weight: 600;
+}
+.item-type.buy { background: rgba(46,232,192,0.15); color: var(–teal); }
+.item-type.trade { background: rgba(245,200,66,0.15); color: var(–gold); }
+
+.btn-remove {
+background: none;
+border: none;
+color: var(–muted);
+cursor: pointer;
+font-size: 1.1rem;
+line-height: 1;
+padding: 2px 4px;
+transition: color 0.2s;
+}
+.btn-remove:hover { color: var(–red); }
+
+.empty-state {
+text-align: center;
+padding: 24px;
+color: var(–muted);
+font-size: 0.85rem;
+}
+
+/* Totals */
+.totals-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+margin-bottom: 12px;
+}
+.totals-grid.full { grid-template-columns: 1fr; }
+
+.total-box {
+background: var(–surface2);
+border-radius: 10px;
+padding: 12px 14px;
+border: 1px solid var(–border);
+}
+.total-box .label {
+font-size: 0.68rem;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+color: var(–muted);
+margin-bottom: 4px;
+}
+.total-box .value {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 1.5rem;
+letter-spacing: 1px;
+color: var(–text);
+}
+.total-box.highlight { border-color: var(–gold-dim); background: rgba(245,200,66,0.07); }
+.total-box.highlight .value { color: var(–gold); }
+.total-box.teal-hl { border-color: rgba(46,232,192,0.3); background: rgba(46,232,192,0.06); }
+.total-box.teal-hl .value { color: var(–teal); }
+
+/* Offer bars */
+.offer-row {
+display: grid;
+grid-template-columns: 40px 1fr auto;
+align-items: center;
+gap: 10px;
+padding: 10px 0;
+border-bottom: 1px solid var(–border);
+}
+.offer-row:last-child { border-bottom: none; }
+.offer-pct {
+font-size: 0.78rem;
+color: var(–muted);
+font-weight: 600;
+}
+.offer-bar-wrap {
+height: 6px;
+background: var(–border);
+border-radius: 3px;
+overflow: hidden;
+}
+.offer-bar {
+height: 100%;
+border-radius: 3px;
+background: var(–gold);
+transition: width 0.4s ease;
+}
+.offer-amount {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 1.1rem;
+letter-spacing: 0.5px;
+color: var(–gold);
+min-width: 70px;
+text-align: right;
+}
+
+/* Tax section */
+.tax-row {
+display: flex;
+align-items: center;
+gap: 10px;
+flex-wrap: wrap;
+}
+.tax-row .field { flex: 1; min-width: 120px; }
+.tax-toggle {
+display: flex;
+align-items: center;
+gap: 8px;
+cursor: pointer;
+user-select: none;
+font-size: 0.85rem;
+color: var(–muted);
+}
+.toggle-switch {
+width: 36px; height: 20px;
+background: var(–border);
+border-radius: 10px;
+position: relative;
+transition: background 0.2s;
+flex-shrink: 0;
+}
+.toggle-switch::after {
+content: ‘’;
+position: absolute;
+width: 14px; height: 14px;
+background: var(–muted);
+border-radius: 50%;
+top: 3px; left: 3px;
+transition: all 0.2s;
+}
+.toggle-switch.on { background: var(–gold); }
+.toggle-switch.on::after { left: 19px; background: #0f0e11; }
+
+/* Section sep */
+.sep {
+height: 1px;
+background: var(–border);
+margin: 16px 0;
+}
+
+/* Clear btn */
+.btn-clear {
+width: 100%;
+padding: 10px;
+background: transparent;
+border: 1px solid var(–border);
+border-radius: 8px;
+color: var(–muted);
+font-family: ‘DM Sans’, sans-serif;
+font-size: 0.85rem;
+cursor: pointer;
+transition: all 0.2s;
+letter-spacing: 0.5px;
+}
+.btn-clear:hover { border-color: var(–red); color: var(–red); }
+
+/* Responsive */
+@media (max-width: 400px) {
+.input-row { grid-template-columns: 1fr auto; }
+.price-field { grid-column: 1; width: 100%; }
+.btn-add { grid-column: 2; grid-row: 1; }
+.totals-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+</head>
+<body>
+
+<div class="header">
+  <h1>Card Show Calc</h1>
+  <p>Buy · Trade · Tax — All in one</p>
+</div>
+
+<!-- Tabs -->
+
+<div class="tabs">
+  <button class="tab active" onclick="setTab('buy')">💳 Buy</button>
+  <button class="tab" onclick="setTab('trade')">🔄 Trade</button>
+  <button class="tab" onclick="setTab('summary')">📊 Summary</button>
+</div>
+
+<!-- BUY TAB -->
+
+<div id="tab-buy">
+  <div class="card">
+    <div class="section-label">Add Card to Buy</div>
+    <div class="input-row">
+      <div class="field">
+        <label>Card Name</label>
+        <input type="text" id="buy-name" placeholder="e.g. Charizard Holo" />
+      </div>
+      <div class="field price-field">
+        <label>Market $</label>
+        <input type="number" id="buy-price" placeholder="0.00" min="0" step="0.01" />
+      </div>
+      <button class="btn-add" onclick="addItem('buy')">+ ADD</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Buy List</div>
+    <div class="items-list" id="buy-list">
+      <div class="empty-state">No cards added yet</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Buy Offers</div>
+    <div class="totals-grid">
+      <div class="total-box highlight">
+        <div class="label">Total Market Value</div>
+        <div class="value" id="buy-total">$0.00</div>
+      </div>
+      <div class="total-box">
+        <div class="label">Card Count</div>
+        <div class="value" id="buy-count">0</div>
+      </div>
+    </div>
+
+```
+<div id="buy-offers">
+  <div class="offer-row">
+    <span class="offer-pct">70%</span>
+    <div class="offer-bar-wrap"><div class="offer-bar" id="buy-bar-70" style="width:70%"></div></div>
+    <span class="offer-amount" id="buy-amt-70">$0.00</span>
+  </div>
+  <div class="offer-row">
+    <span class="offer-pct">75%</span>
+    <div class="offer-bar-wrap"><div class="offer-bar" id="buy-bar-75" style="width:75%"></div></div>
+    <span class="offer-amount" id="buy-amt-75">$0.00</span>
+  </div>
+  <div class="offer-row">
+    <span class="offer-pct">80%</span>
+    <div class="offer-bar-wrap"><div class="offer-bar" id="buy-bar-80" style="width:80%"></div></div>
+    <span class="offer-amount" id="buy-amt-80">$0.00</span>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- Tax -->
+<div class="section-label">Sales Tax</div>
+<div class="tax-row">
+  <div class="field">
+    <label>Tax Rate %</label>
+    <input type="number" id="buy-tax-rate" value="8" min="0" max="30" step="0.1" oninput="updateTotals()" />
+  </div>
+  <label class="tax-toggle" onclick="toggleTax('buy')">
+    <div class="toggle-switch" id="buy-tax-toggle"></div>
+    Apply Tax
+  </label>
+</div>
+<div id="buy-tax-result" style="display:none; margin-top:12px;">
+  <div class="totals-grid">
+    <div class="total-box">
+      <div class="label">Tax Amount</div>
+      <div class="value" id="buy-tax-amt" style="color:var(--red)">$0.00</div>
+    </div>
+    <div class="total-box teal-hl">
+      <div class="label">Total w/ Tax</div>
+      <div class="value" id="buy-with-tax">$0.00</div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+<button class="btn-clear" onclick="clearList('buy')">✕ Clear Buy List</button>
+
+</div>
+
+<!-- TRADE TAB -->
+
+<div id="tab-trade" style="display:none">
+  <div class="card">
+    <div class="section-label">Add Card to Trade</div>
+    <div class="input-row">
+      <div class="field">
+        <label>Card Name</label>
+        <input type="text" id="trade-name" placeholder="e.g. Luffy Alt Art" />
+      </div>
+      <div class="field price-field">
+        <label>Market $</label>
+        <input type="number" id="trade-price" placeholder="0.00" min="0" step="0.01" />
+      </div>
+      <button class="btn-add" onclick="addItem('trade')">+ ADD</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Trade List</div>
+    <div class="items-list" id="trade-list">
+      <div class="empty-state">No cards added yet</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Trade Values</div>
+    <div class="totals-grid">
+      <div class="total-box highlight">
+        <div class="label">Total Market Value</div>
+        <div class="value" id="trade-total">$0.00</div>
+      </div>
+      <div class="total-box">
+        <div class="label">Card Count</div>
+        <div class="value" id="trade-count">0</div>
+      </div>
+    </div>
+
+```
+<div>
+  <div class="offer-row">
+    <span class="offer-pct">70%</span>
+    <div class="offer-bar-wrap"><div class="offer-bar" id="trade-bar-70" style="width:70%"></div></div>
+    <span class="offer-amount" id="trade-amt-70">$0.00</span>
+  </div>
+  <div class="offer-row">
+    <span class="offer-pct">75%</span>
+    <div class="offer-bar-wrap"><div class="offer-bar" id="trade-bar-75" style="width:75%"></div></div>
+    <span class="offer-amount" id="trade-amt-75">$0.00</span>
+  </div>
+  <div class="offer-row">
+    <span class="offer-pct">80%</span>
+    <div class="offer-bar-wrap"><div class="offer-bar" id="trade-bar-80" style="width:80%"></div></div>
+    <span class="offer-amount" id="trade-amt-80">$0.00</span>
+  </div>
+</div>
+```
+
+  </div>
+
+<button class="btn-clear" onclick="clearList('trade')">✕ Clear Trade List</button>
+
+</div>
+
+<!-- SUMMARY TAB -->
+
+<div id="tab-summary" style="display:none">
+  <div class="card">
+    <div class="section-label">Combined Summary</div>
+    <div class="totals-grid">
+      <div class="total-box teal-hl">
+        <div class="label">Buy Total</div>
+        <div class="value" id="sum-buy">$0.00</div>
+      </div>
+      <div class="total-box highlight">
+        <div class="label">Trade Total</div>
+        <div class="value" id="sum-trade">$0.00</div>
+      </div>
+    </div>
+    <div class="total-box" style="margin-top:10px;">
+      <div class="label">Grand Total Market Value</div>
+      <div class="value" id="sum-grand" style="font-size:2rem; color:var(--gold)">$0.00</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">All Offer Tiers — Combined</div>
+    <div class="offer-row">
+      <span class="offer-pct">70%</span>
+      <div class="offer-bar-wrap"><div class="offer-bar" id="sum-bar-70" style="width:70%"></div></div>
+      <span class="offer-amount" id="sum-amt-70">$0.00</span>
+    </div>
+    <div class="offer-row">
+      <span class="offer-pct">75%</span>
+      <div class="offer-bar-wrap"><div class="offer-bar" id="sum-bar-75" style="width:75%"></div></div>
+      <span class="offer-amount" id="sum-amt-75">$0.00</span>
+    </div>
+    <div class="offer-row">
+      <span class="offer-pct">80%</span>
+      <div class="offer-bar-wrap"><div class="offer-bar" id="sum-bar-80" style="width:80%"></div></div>
+      <span class="offer-amount" id="sum-amt-80">$0.00</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Buy List Items (<span id="sum-buy-count">0</span>)</div>
+    <div id="sum-buy-list" class="items-list"><div class="empty-state">Empty</div></div>
+    <div class="sep"></div>
+    <div class="section-label">Trade List Items (<span id="sum-trade-count">0</span>)</div>
+    <div id="sum-trade-list" class="items-list"><div class="empty-state">Empty</div></div>
+  </div>
+
+<button class="btn-clear" onclick="clearAll()">✕ Clear Everything</button>
+
+</div>
+
+<script>
+  const state = {
+    buy: [],
+    trade: [],
+    buyTaxOn: false,
+    tradeTaxOn: false
+  };
+
+  let idCounter = 0;
+
+  function setTab(tab) {
+    ['buy','trade','summary'].forEach(t => {
+      document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+    });
+    document.querySelectorAll('.tab').forEach((el, i) => {
+      el.classList.toggle('active', ['buy','trade','summary'][i] === tab);
+    });
+    if (tab === 'summary') updateSummary();
+  }
+
+  function fmt(n) {
+    return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function addItem(type) {
+    const nameEl = document.getElementById(type + '-name');
+    const priceEl = document.getElementById(type + '-price');
+    const name = nameEl.value.trim();
+    const price = parseFloat(priceEl.value);
+    if (!name || isNaN(price) || price <= 0) {
+      nameEl.style.borderColor = !name ? 'var(--red)' : '';
+      priceEl.style.borderColor = (!price || price <= 0) ? 'var(--red)' : '';
+      setTimeout(() => { nameEl.style.borderColor = ''; priceEl.style.borderColor = ''; }, 1200);
+      return;
+    }
+    state[type].push({ id: ++idCounter, name, price });
+    nameEl.value = '';
+    priceEl.value = '';
+    nameEl.focus();
+    renderList(type);
+    updateTotals();
+  }
+
+  function removeItem(type, id) {
+    state[type] = state[type].filter(i => i.id !== id);
+    renderList(type);
+    updateTotals();
+  }
+
+  function renderList(type) {
+    const el = document.getElementById(type + '-list');
+    if (!state[type].length) {
+      el.innerHTML = '<div class="empty-state">No cards added yet</div>';
+      return;
+    }
+    el.innerHTML = state[type].map(item => `
+      <div class="item-row">
+        <span class="item-name">${escHtml(item.name)}</span>
+        <span class="item-type ${type}">${type}</span>
+        <span class="item-price">${fmt(item.price)}</span>
+        <button class="btn-remove" onclick="removeItem('${type}', ${item.id})">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function updateTotals() {
+    ['buy','trade'].forEach(type => {
+      const total = state[type].reduce((s, i) => s + i.price, 0);
+      const count = state[type].length;
+      document.getElementById(type + '-total').textContent = fmt(total);
+      document.getElementById(type + '-count').textContent = count;
+
+      [70, 75, 80].forEach(pct => {
+        document.getElementById(type + '-amt-' + pct).textContent = fmt(total * pct / 100);
+      });
+
+      // Tax
+      const taxOn = type === 'buy' ? state.buyTaxOn : state.tradeTaxOn;
+      const taxRate = parseFloat(document.getElementById(type + '-tax-rate').value) || 0;
+      const taxAmt = taxOn ? total * taxRate / 100 : 0;
+      document.getElementById(type + '-tax-amt').textContent = fmt(taxAmt);
+      document.getElementById(type + '-with-tax').textContent = fmt(total + taxAmt);
+    });
+  }
+
+  function toggleTax(type) {
+    if (type === 'buy') state.buyTaxOn = !state.buyTaxOn;
+    else state.tradeTaxOn = !state.tradeTaxOn;
+    document.getElementById(type + '-tax-toggle').classList.toggle('on', type === 'buy' ? state.buyTaxOn : state.tradeTaxOn);
+    document.getElementById(type + '-tax-result').style.display = (type === 'buy' ? state.buyTaxOn : state.tradeTaxOn) ? 'block' : 'none';
+    updateTotals();
+  }
+
+  function updateSummary() {
+    const buyTotal = state.buy.reduce((s, i) => s + i.price, 0);
+    const tradeTotal = state.trade.reduce((s, i) => s + i.price, 0);
+    const grand = buyTotal + tradeTotal;
+
+    document.getElementById('sum-buy').textContent = fmt(buyTotal);
+    document.getElementById('sum-trade').textContent = fmt(tradeTotal);
+    document.getElementById('sum-grand').textContent = fmt(grand);
+    document.getElementById('sum-buy-count').textContent = state.buy.length;
+    document.getElementById('sum-trade-count').textContent = state.trade.length;
+
+    [70, 75, 80].forEach(pct => {
+      document.getElementById('sum-amt-' + pct).textContent = fmt(grand * pct / 100);
+    });
+
+    const renderSummaryList = (type, elId) => {
+      const el = document.getElementById(elId);
+      if (!state[type].length) { el.innerHTML = '<div class="empty-state">Empty</div>'; return; }
+      el.innerHTML = state[type].map(item => `
+        <div class="item-row">
+          <span class="item-name">${escHtml(item.name)}</span>
+          <span class="item-type ${type}">${type}</span>
+          <span class="item-price">${fmt(item.price)}</span>
+        </div>
+      `).join('');
+    };
+    renderSummaryList('buy', 'sum-buy-list');
+    renderSummaryList('trade', 'sum-trade-list');
+  }
+
+  function clearList(type) {
+    if (!state[type].length) return;
+    if (!confirm(`Clear all ${type} items?`)) return;
+    state[type] = [];
+    renderList(type);
+    updateTotals();
+  }
+
+  function clearAll() {
+    if (!confirm('Clear everything?')) return;
+    state.buy = [];
+    state.trade = [];
+    renderList('buy');
+    renderList('trade');
+    updateTotals();
+    updateSummary();
+  }
+
+  // Enter key support
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const buyVisible = document.getElementById('tab-buy').style.display !== 'none';
+      const tradeVisible = document.getElementById('tab-trade').style.display !== 'none';
+      if (buyVisible) addItem('buy');
+      else if (tradeVisible) addItem('trade');
+    }
+  });
+</script>
+
+</body>
+</html>
