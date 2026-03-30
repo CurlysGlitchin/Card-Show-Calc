@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f2f0eb">
+<meta name="color-scheme" content="light">
+<title>Card Show Offer Calculator — Free Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Google AdSense verification meta tag -->
+
+<meta name="google-adsense-account" content="ca-pub-8537835676111154">
+<!-- Google AdSense serving script -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8537835676111154" crossorigin="anonymous"></script>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; color-scheme: light; }
+  body {
+    background: #f2f0eb; color: #1a1714;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh; padding: 20px 16px 48px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ── AdSense slot styling ─────────────────────────────────── */
+  .ad-slot {
+    width: 100%; min-height: 100px;
+    background: #f7f5f0; border: 1.5px dashed #d4cfc6;
+    border-radius: 10px; margin-bottom: 14px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  /* Label shown only before AdSense is activated */
+  .ad-slot-placeholder {
+    font-size: 0.68rem; color: #a09890; text-transform: uppercase;
+    letter-spacing: 2px; font-weight: 600; pointer-events: none;
+  }
+
+  /* Header */
+  .header { text-align: center; margin-bottom: 24px; }
+  .eyebrow {
+    display: inline-block; font-size: 0.65rem; letter-spacing: 2px;
+    text-transform: uppercase; color: #6b6358; margin-bottom: 10px;
+    border: 1.5px solid #a09890; border-radius: 20px; padding: 4px 14px;
+    background: #ffffff;
+  }
+  .header h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.8rem, 12vw, 4.6rem); letter-spacing: 3px; color: #1a1714; line-height: 0.95; }
+  .header h1 span { color: #1a56db; }
+  .header p { color: #6b6358; font-size: 0.87rem; margin-top: 8px; line-height: 1.5; max-width: 300px; margin-left: auto; margin-right: auto; }
+
+  .card { background: #ffffff; border: 1.5px solid #d4cfc6; border-radius: 14px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .section-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: #6b6358; margin-bottom: 12px; font-weight: 700; }
+
+  .input-stack { display: flex; flex-direction: column; gap: 10px; }
+  .input-row-top { display: grid; grid-template-columns: 1fr 100px; gap: 8px; }
+  .field label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #6b6358; margin-bottom: 5px; font-weight: 700; }
+  .field input {
+    width: 100%; background: #f7f5f0; border: 1.5px solid #d4cfc6;
+    border-radius: 10px; padding: 13px 12px; color: #1a1714;
+    font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 500;
+    outline: none; -webkit-appearance: none; appearance: none;
+  }
+  .field input:focus { border-color: #1a56db; }
+  .field input::placeholder { color: #a09890; }
+  .field input[type="number"] { text-align: right; -moz-appearance: textfield; }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+  .btn-primary { display: block; width: 100%; padding: 14px 20px; background-color: #1a56db; color: #ffffff; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; min-height: 50px; -webkit-appearance: none; appearance: none; }
+  .btn-primary:active { background-color: #0f3a99; }
+
+  .offer-picker { display: none; margin-top: 12px; padding: 14px; background: #e8eeff; border: 2px solid #1a56db; border-radius: 12px; }
+  .offer-picker.show { display: block; }
+  .picker-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: #0f3a99; margin-bottom: 6px; font-weight: 700; text-align: center; }
+  .picker-sub { font-size: 0.85rem; color: #3d3830; text-align: center; margin-bottom: 12px; font-weight: 500; }
+  .picker-sub strong { color: #1a1714; }
+  .picker-sub span { color: #1a56db; font-weight: 700; }
+  .picker-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .picker-btn { padding: 12px 4px; border-radius: 10px; border: 2px solid #1a56db; background-color: #ffffff; color: #1a56db; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 1.05rem; font-weight: 800; text-align: center; min-height: 58px; -webkit-appearance: none; appearance: none; }
+  .picker-btn:active { background-color: #1a56db; color: #ffffff; }
+  .picker-btn small { display: block; font-size: 0.75rem; font-weight: 600; margin-top: 3px; color: #0d7a3e; }
+  .picker-btn:active small { color: #ffffff; }
+  .picker-cancel { text-align: center; margin-top: 10px; font-size: 0.78rem; color: #6b6358; }
+  .picker-cancel span { color: #c0392b; cursor: pointer; font-weight: 700; }
+
+  .cart-empty { text-align: center; padding: 20px; color: #6b6358; font-size: 0.85rem; }
+  .cart-items { display: flex; flex-direction: column; gap: 10px; }
+  .cart-item { background: #f7f5f0; border: 1.5px solid #d4cfc6; border-radius: 10px; padding: 12px 14px; }
+  .cart-item-row { display: flex; align-items: center; gap: 8px; }
+  .cart-item-name { flex: 1; font-size: 0.95rem; font-weight: 700; color: #1a1714; line-height: 1.3; word-break: break-word; }
+  .cart-item-market { font-size: 0.82rem; color: #6b6358; font-weight: 600; flex-shrink: 0; }
+  .cart-item-remove { background-color: #fdecea; border: 1.5px solid #f5c6c2; color: #c0392b; cursor: pointer; font-size: 0.85rem; font-weight: 700; border-radius: 6px; padding: 4px 8px; min-width: 36px; min-height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; -webkit-appearance: none; appearance: none; }
+  .cart-item-remove:active { background-color: #c0392b; color: #ffffff; }
+
+  .totals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .total-box { background: #f7f5f0; border-radius: 10px; padding: 12px 14px; border: 1.5px solid #d4cfc6; }
+  .total-box .tl { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1.5px; color: #6b6358; margin-bottom: 4px; font-weight: 700; }
+  .total-box .tv { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 1px; color: #1a1714; }
+  .total-box.blue-b { border-color: #1a56db; background: #e8eeff; }
+  .total-box.blue-b .tv { color: #0f3a99; }
+  .total-box.green-b { border-color: #0d7a3e; background: #e6f5ec; }
+  .total-box.green-b .tv { color: #0d7a3e; }
+
+  .offer-tier-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #d4cfc6; }
+  .offer-tier-row:last-child { border-bottom: none; }
+  .tier-pct { font-size: 0.82rem; color: #6b6358; font-weight: 700; min-width: 36px; }
+  .tier-bar-wrap { flex: 1; height: 6px; background: #d4cfc6; border-radius: 3px; overflow: hidden; }
+  .tier-bar { height: 100%; border-radius: 3px; background-color: #1a56db; }
+  .tier-amt { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.5px; color: #0f3a99; min-width: 72px; text-align: right; }
+
+  /* Custom % row */
+  .custom-tier-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
+  .custom-pct-wrap { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .custom-pct-input {
+    width: 54px; background: #f7f5f0; border: 1.5px solid #1a56db;
+    border-radius: 8px; padding: 5px 8px; color: #0f3a99;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 700;
+    text-align: center; outline: none; -webkit-appearance: none; appearance: none;
+    -moz-appearance: textfield;
+  }
+  .custom-pct-input:focus { background: #e8eeff; }
+  .custom-pct-input::-webkit-inner-spin-button,
+  .custom-pct-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .custom-pct-symbol { font-size: 0.82rem; color: #1a56db; font-weight: 700; }
+
+  .sep { height: 1px; background: #d4cfc6; margin: 14px 0; }
+  .tax-row { display: flex; align-items: center; gap: 12px; }
+  .tax-row .field { flex: 1; }
+  .tax-toggle-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; min-height: 44px; flex-shrink: 0; }
+  .tax-toggle-label { font-size: 0.82rem; color: #3d3830; font-weight: 600; white-space: nowrap; }
+  .toggle-sw { width: 44px; height: 26px; border-radius: 13px; background-color: #a09890; position: relative; transition: background-color 0.2s; flex-shrink: 0; cursor: pointer; }
+  .toggle-sw::after { content: ''; position: absolute; width: 20px; height: 20px; border-radius: 50%; background-color: #ffffff; top: 3px; left: 3px; transition: left 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+  .toggle-sw.on { background-color: #1a56db; }
+  .toggle-sw.on::after { left: 21px; }
+  .tax-result { display: none; margin-top: 12px; }
+  .tax-result.show { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .btn-ghost { width: 100%; padding: 12px; background: transparent; border: 1.5px solid #a09890; border-radius: 10px; color: #6b6358; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.85rem; cursor: pointer; min-height: 44px; -webkit-appearance: none; appearance: none; }
+  .btn-ghost:active { border-color: #c0392b; color: #c0392b; background: #fdecea; }
+
+  /* Gate */
+  .gate-banner { margin-top: 8px; background: #ffffff; border: 2px solid #1a56db; border-radius: 16px; padding: 24px 20px; text-align: center; }
+  .gate-emoji { font-size: 2rem; margin-bottom: 10px; }
+  .gate-banner h2 { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 2px; color: #0f3a99; margin-bottom: 8px; }
+  .gate-banner > p { font-size: 0.83rem; color: #6b6358; line-height: 1.55; margin-bottom: 16px; max-width: 280px; margin-left: auto; margin-right: auto; }
+  .gate-features { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; text-align: left; max-width: 260px; margin-left: auto; margin-right: auto; }
+  .gate-feature { display: flex; align-items: flex-start; gap: 10px; font-size: 0.82rem; color: #3d3830; font-weight: 500; line-height: 1.4; }
+  .gate-feature .check { color: #0d7a3e; font-weight: 900; font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+  .gate-form { display: flex; flex-direction: column; gap: 10px; }
+  .gate-form .field label { text-align: left; }
+  .gate-form input { width: 100%; background: #f7f5f0; border: 1.5px solid #d4cfc6; border-radius: 10px; padding: 14px; color: #1a1714; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 500; outline: none; -webkit-appearance: none; appearance: none; }
+  .gate-form input:focus { border-color: #1a56db; }
+  .gate-form input::placeholder { color: #a09890; }
+  .input-or { display: flex; align-items: center; gap: 10px; font-size: 0.72rem; color: #6b6358; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .input-or::before, .input-or::after { content: ''; flex: 1; height: 1px; background: #d4cfc6; }
+  .gate-fine { font-size: 0.72rem; color: #6b6358; }
+
+  /* Formspree status messages */
+  .form-status { display: none; padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; margin-top: 4px; }
+  .form-status.success { display: block; background: #e6f5ec; color: #0d7a3e; border: 1px solid #0d7a3e; }
+  .form-status.error { display: block; background: #fdecea; color: #c0392b; border: 1px solid #c0392b; }
+  .btn-primary:disabled { background-color: #a09890; cursor: not-allowed; }
+
+  .gate-success { display: none; padding: 4px 0; }
+  .gate-success.show { display: block; }
+  .gate-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 2px; color: #0d7a3e; margin-bottom: 8px; }
+  .gate-success p { font-size: 0.83rem; color: #6b6358; margin-bottom: 16px; }
+  .btn-go { display: flex; align-items: center; justify-content: center; padding: 14px 32px; background-color: #0d7a3e; color: #ffffff; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 800; text-decoration: none; min-height: 50px; }
+  .btn-go:active { background-color: #095c2e; }
+
+  @media (min-width: 540px) { body { max-width: 480px; margin: 0 auto; } }
+</style>
+
+</head>
+<body>
+
+<!-- ============================================================
+     ADSENSE SLOT — TOP BANNER (appears above calculator)
+     Step 2 of 2: When approved, delete the placeholder div
+     and uncomment the <ins> block. Replace YOUR-PUB-ID and
+     YOUR-SLOT-ID with your real values from AdSense dashboard.
+     ============================================================ -->
+
+<div class="ad-slot" id="ad-top" style="display:none">
+  <span class="ad-slot-placeholder">Ad — Top Banner</span>
+</div>
+<!--
+<ins class="adsbygoogle"
+  style="display:block;width:100%;min-height:100px"
+  data-ad-client="ca-pub-YOUR-PUB-ID"
+  data-ad-slot="YOUR-SLOT-ID"
+  data-ad-format="auto"
+  data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+-->
+
+<div class="header">
+  <div class="eyebrow">Free Tool for Card Show Vendors</div>
+  <h1>Card <span>Show</span><br>Calc</h1>
+  <p>Add cards to your cart and instantly see 70/80/90% offer amounts — plus a custom % — no math needed.</p>
+</div>
+
+<div class="card">
+  <div class="section-label">Add a Card</div>
+  <div class="input-stack">
+    <div class="input-row-top">
+      <div class="field">
+        <label>Card Name</label>
+        <input type="text" id="card-name" placeholder="e.g. Charizard Holo"
+          autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" />
+      </div>
+      <div class="field">
+        <label>Market $</label>
+        <input type="number" id="card-price" placeholder="0.00" min="0" step="0.01" inputmode="decimal" />
+      </div>
+    </div>
+    <button class="btn-primary" onclick="stageCard()">+ Add to Cart</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-label">Cart (<span id="cart-count">0</span> cards)</div>
+  <div id="cart-body"><div class="cart-empty">No cards added yet — add one above!</div></div>
+</div>
+
+<!-- ============================================================
+     ADSENSE SLOT — MID PAGE (between cart and totals)
+     Same swap process as above — delete placeholder, uncomment ins.
+     ============================================================ -->
+
+<div class="ad-slot" id="ad-mid" style="display:none">
+  <span class="ad-slot-placeholder">Ad — Mid Page</span>
+</div>
+<!--
+<ins class="adsbygoogle"
+  style="display:block;width:100%;min-height:100px"
+  data-ad-client="ca-pub-YOUR-PUB-ID"
+  data-ad-slot="YOUR-SLOT-ID-2"
+  data-ad-format="auto"
+  data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+-->
+
+<div class="card" id="totals-card" style="display:none">
+  <div class="section-label">Cart Totals</div>
+  <div class="totals-grid">
+    <div class="total-box blue-b"><div class="tl">Market Value</div><div class="tv" id="total-market">$0.00</div></div>
+    <div class="total-box"><div class="tl">Cards</div><div class="tv" id="total-count">0</div></div>
+  </div>
+  <div class="section-label">Offer Tiers — Full Cart</div>
+  <div class="offer-tier-row"><span class="tier-pct">70%</span><div class="tier-bar-wrap"><div class="tier-bar" style="width:70%"></div></div><span class="tier-amt" id="total-70">$0.00</span></div>
+  <div class="offer-tier-row"><span class="tier-pct">80%</span><div class="tier-bar-wrap"><div class="tier-bar" style="width:80%"></div></div><span class="tier-amt" id="total-80">$0.00</span></div>
+  <div class="offer-tier-row"><span class="tier-pct">90%</span><div class="tier-bar-wrap"><div class="tier-bar" style="width:90%"></div></div><span class="tier-amt" id="total-90">$0.00</span></div>
+  <div class="custom-tier-row">
+    <div class="custom-pct-wrap">
+      <input type="number" class="custom-pct-input" id="custom-pct" value="75" min="1" max="200" step="1" inputmode="numeric" oninput="renderTotals()" />
+      <span class="custom-pct-symbol">%</span>
+    </div>
+    <div class="tier-bar-wrap"><div class="tier-bar" id="custom-bar" style="width:75%"></div></div>
+    <span class="tier-amt" id="total-custom">$0.00</span>
+  </div>
+  <div class="sep"></div>
+  <div class="section-label">Sales Tax (optional)</div>
+  <div class="tax-row">
+    <div class="field">
+      <label>Tax Rate %</label>
+      <input type="number" id="tax-rate" value="8" min="0" max="30" step="0.1" inputmode="decimal" oninput="recalcTax()" />
+    </div>
+    <div class="tax-toggle-wrap" onclick="toggleTax()">
+      <div class="toggle-sw" id="tax-toggle"></div>
+      <span class="tax-toggle-label">Apply Tax</span>
+    </div>
+  </div>
+  <div class="tax-result" id="tax-result">
+    <div class="total-box"><div class="tl">Tax (on 80%)</div><div class="tv" id="tax-amt" style="color:#c0392b">$0.00</div></div>
+    <div class="total-box green-b"><div class="tl">80% + Tax</div><div class="tv" id="tax-with">$0.00</div></div>
+  </div>
+  <div class="sep"></div>
+  <button class="btn-ghost" onclick="clearCart()">✕ Clear Cart</button>
+</div>
+
+<!-- Gate Banner -->
+
+<div class="gate-banner">
+  <div class="gate-emoji">📋</div>
+  <h2>Want the Full Show Tracker?</h2>
+  <p>Log every buy and trade across your whole show day. Daily totals, margin saved, full transaction history — plus <strong>dark mode</strong> for evening shows.</p>
+  <div class="gate-features">
+    <div class="gate-feature"><span class="check">✓</span> Log every card you buy or trade</div>
+    <div class="gate-feature"><span class="check">✓</span> Daily summary dashboard</div>
+    <div class="gate-feature"><span class="check">✓</span> Transaction history saved automatically</div>
+    <div class="gate-feature"><span class="check">✓</span> Margin retained vs. market value</div>
+    <div class="gate-feature"><span class="check">✓</span> 🌙 Dark mode toggle for evening shows</div>
+  </div>
+
+  <div class="gate-form" id="gate-form">
+    <div class="field">
+      <label>📱 Phone Number <span style="color:#c0392b;font-size:0.75em">*preferred</span></label>
+      <input type="tel" id="gate-phone" placeholder="(555) 867-5309" inputmode="tel" autocomplete="tel" />
+    </div>
+    <div class="input-or">or</div>
+    <div class="field">
+      <label>✉️ Email Address</label>
+      <input type="email" id="gate-email" placeholder="your@email.com" inputmode="email" autocomplete="email" />
+    </div>
+    <div class="form-status" id="form-status"></div>
+    <button class="btn-primary" id="submit-btn" onclick="unlockTracker()">Get Free Access →</button>
+    <div class="gate-fine">Phone preferred — we'll only text show-day reminders. No spam ever.</div>
+  </div>
+
+  <div class="gate-success" id="gate-success">
+    <h3>You're In! 🎉</h3>
+    <p>Open the full tracker — saved in your browser.</p>
+    <a class="btn-go" href="tracker.html">Open Show Tracker →</a>
+  </div>
+</div>
+
+<!-- ============================================================
+     ADSENSE SLOT — BOTTOM (below gate, catches scrollers)
+     ============================================================ -->
+
+<div class="ad-slot" style="margin-top:14px;display:none" id="ad-bottom">
+  <span class="ad-slot-placeholder">Ad — Bottom</span>
+</div>
+<!--
+<ins class="adsbygoogle"
+  style="display:block;width:100%;min-height:100px"
+  data-ad-client="ca-pub-YOUR-PUB-ID"
+  data-ad-slot="YOUR-SLOT-ID-3"
+  data-ad-format="auto"
+  data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+-->
+
+<script>
+  // ============================================================
+  // FORMSPREE CONFIG
+  // 1. Go to formspree.io → New Form → copy your endpoint URL
+  // 2. Paste it below replacing the placeholder
+  // ============================================================
+  const FORMSPREE_URL = 'https://formspree.io/f/xkopjnqq';
+
+  let cart = [], staged = null, taxOn = false, idCtr = 0;
+
+  function fmt(n) { return '$' + Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // ── Cart logic ───────────────────────────────────────────────
+  function stageCard() {
+    const nEl = document.getElementById('card-name');
+    const pEl = document.getElementById('card-price');
+    const name = nEl.value.trim(), price = parseFloat(pEl.value);
+    let err = false;
+    if (!name) { nEl.style.borderColor='#c0392b'; setTimeout(()=>nEl.style.borderColor='#d4cfc6',1400); err=true; }
+    if (!price||price<=0) { pEl.style.borderColor='#c0392b'; setTimeout(()=>pEl.style.borderColor='#d4cfc6',1400); err=true; }
+    if (err) return;
+    cart.push({ id: ++idCtr, name, price });
+    nEl.value = '';
+    pEl.value = '';
+    nEl.focus();
+    renderCart(); renderTotals();
+  }
+
+  function removeCard(id) { cart = cart.filter(c => c.id !== id); renderCart(); renderTotals(); }
+
+  function renderCart() {
+    const body = document.getElementById('cart-body');
+    document.getElementById('cart-count').textContent = cart.length;
+    if (!cart.length) { body.innerHTML = '<div class="cart-empty">No cards added yet — add one above!</div>'; return; }
+    body.innerHTML = '<div class="cart-items">' + cart.map(item => {
+      return `<div class="cart-item">
+        <div class="cart-item-row">
+          <span class="cart-item-name">${esc(item.name)}</span>
+          <span class="cart-item-market">${fmt(item.price)}</span>
+          <button class="cart-item-remove" onclick="removeCard(${item.id})">✕</button>
+        </div>
+      </div>`;
+    }).join('') + '</div>';
+  }
+
+  function renderTotals() {
+    const has = cart.length > 0;
+    document.getElementById('totals-card').style.display = has ? 'block' : 'none';
+    if (!has) return;
+    const market = cart.reduce((s,c) => s+c.price, 0);
+    document.getElementById('total-market').textContent = fmt(market);
+    document.getElementById('total-count').textContent = cart.length;
+    // Fixed tiers
+    [70, 80, 90].forEach(pct => {
+      document.getElementById('total-'+pct).textContent = fmt(market*pct/100);
+    });
+    // Custom tier
+    const customPct = Math.max(1, parseFloat(document.getElementById('custom-pct').value) || 75);
+    document.getElementById('total-custom').textContent = fmt(market * customPct / 100);
+    // Cap bar at 100% visually
+    document.getElementById('custom-bar').style.width = Math.min(customPct, 100) + '%';
+    recalcTax(market);
+  }
+
+  function toggleTax() {
+    taxOn = !taxOn;
+    document.getElementById('tax-toggle').classList.toggle('on', taxOn);
+    document.getElementById('tax-result').classList.toggle('show', taxOn);
+    recalcTax();
+  }
+
+  function recalcTax(market) {
+    if (!taxOn) return;
+    if (market===undefined) market = cart.reduce((s,c)=>s+c.price,0);
+    const rate = parseFloat(document.getElementById('tax-rate').value)||0;
+    const base = market * 0.80;
+    document.getElementById('tax-amt').textContent = fmt(base*rate/100);
+    document.getElementById('tax-with').textContent = fmt(base + base*rate/100);
+  }
+
+  function clearCart() {
+    if (!cart.length) return;
+    if (!confirm('Clear all cards from cart?')) return;
+    cart = []; renderCart(); renderTotals();
+  }
+
+  // ── Gate / Formspree ─────────────────────────────────────────
+  async function unlockTracker() {
+    const phone = document.getElementById('gate-phone').value.trim();
+    const email = document.getElementById('gate-email').value.trim();
+    const phoneValid = phone.replace(/\D/g,'').length >= 10;
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const statusEl = document.getElementById('form-status');
+    const btnEl = document.getElementById('submit-btn');
+
+    // Validate — need at least one
+    if (!phoneValid && !emailValid) {
+      document.getElementById('gate-phone').style.borderColor = '#c0392b';
+      setTimeout(() => document.getElementById('gate-phone').style.borderColor = '#d4cfc6', 1500);
+      document.getElementById('gate-phone').focus();
+      return;
+    }
+
+    // Save locally first so unlock works even if Formspree fails
+    if (phoneValid) localStorage.setItem('csc_phone', phone);
+    if (emailValid) localStorage.setItem('csc_email', email);
+    localStorage.setItem('csc_unlocked', '1');
+
+    // Disable button while submitting
+    btnEl.disabled = true;
+    btnEl.textContent = 'Sending...';
+    statusEl.className = 'form-status';
+
+    // Submit to Formspree (skip if placeholder URL still in place)
+    if (!FORMSPREE_URL.includes('YOUR-FORM-ID')) {
+      try {
+        const res = await fetch(FORMSPREE_URL, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: phoneValid ? phone : '',
+            email: emailValid ? email : '',
+            source: 'Card Show Calc — Gate',
+            submitted_at: new Date().toISOString()
+          })
+        });
+
+        if (res.ok) {
+          // Success — show tracker
+          showSuccess();
+        } else {
+          // Formspree returned an error — still let them in, show warning
+          statusEl.textContent = 'Saved! (Note: could not reach our server — your info is saved locally.)';
+          statusEl.className = 'form-status error';
+          setTimeout(showSuccess, 2000);
+        }
+      } catch (err) {
+        // Network error — still let them in
+        statusEl.textContent = 'Network issue — you\'re still unlocked!';
+        statusEl.className = 'form-status error';
+        setTimeout(showSuccess, 2000);
+      }
+    } else {
+      // Formspree not configured yet — just unlock
+      showSuccess();
+    }
+  }
+
+  function showSuccess() {
+    document.getElementById('gate-form').style.display = 'none';
+    document.getElementById('gate-success').classList.add('show');
+  }
+
+  // Auto-skip gate if already unlocked
+  if (localStorage.getItem('csc_unlocked') === '1') {
+    document.getElementById('gate-form').style.display = 'none';
+    document.getElementById('gate-success').classList.add('show');
+    // Hide ad placeholders once unlocked (optional — remove if you want ads always visible)
+    // document.getElementById('ad-top').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
