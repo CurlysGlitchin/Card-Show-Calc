@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f2f0eb">
+<meta name="color-scheme" content="light">
+<!-- Google AdSense verification meta tag -->
+<meta name="google-adsense-account" content="ca-pub-8537835676111154">
+<!-- Google AdSense serving script -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8537835676111154" crossorigin="anonymous"></script>
+<title>Card Show Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; color-scheme: light; }
+
+/* ── Light mode (default) ─────────────────────────────── */
+body {
+font-family: ‘DM Sans’, sans-serif; min-height: 100vh;
+padding: 20px 16px 48px; -webkit-text-size-adjust: 100%;
+background: #f2f0eb; color: #1a1714;
+}
+/* ── Dark mode ────────────────────────────────────────── */
+body.dark { background: #0f0e11; color: #e8e4f0; }
+
+/* ── Lock screen ──────────────────────────────────────── */
+#lock-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.lock-box { background: #ffffff; border: 1.5px solid #d4cfc6; border-radius: 20px; padding: 32px 24px; text-align: center; max-width: 360px; width: 100%; }
+body.dark .lock-box { background: #1a1820; border-color: #2e2a3a; }
+.lock-icon { font-size: 2.5rem; margin-bottom: 14px; }
+.lock-box h2 { font-family: ‘Bebas Neue’, sans-serif; font-size: 1.9rem; letter-spacing: 2px; color: #0f3a99; margin-bottom: 6px; }
+body.dark .lock-box h2 { color: #6b9fff; }
+.lock-box p { font-size: 0.83rem; color: #6b6358; line-height: 1.5; margin-bottom: 20px; }
+body.dark .lock-box p { color: #7a748a; }
+.lock-inputs { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.lock-inputs input { width: 100%; background: #f7f5f0; border: 1.5px solid #d4cfc6; border-radius: 10px; padding: 13px 14px; color: #1a1714; font-family: ‘DM Sans’, sans-serif; font-size: 16px; font-weight: 500; outline: none; -webkit-appearance: none; appearance: none; }
+body.dark .lock-inputs input { background: #221f2b; border-color: #2e2a3a; color: #e8e4f0; }
+.lock-inputs input::placeholder { color: #a09890; }
+.lock-inputs input:focus { border-color: #1a56db; }
+body.dark .lock-inputs input:focus { border-color: #6b9fff; }
+.input-or { display: flex; align-items: center; gap: 10px; font-size: 0.72rem; color: #6b6358; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.input-or::before, .input-or::after { content: ‘’; flex: 1; height: 1px; background: #d4cfc6; }
+body.dark .input-or { color: #7a748a; }
+body.dark .input-or::before, body.dark .input-or::after { background: #2e2a3a; }
+.lock-fine { font-size: 0.72rem; color: #6b6358; margin-top: 8px; }
+body.dark .lock-fine { color: #7a748a; }
+.lock-back { display: block; margin-top: 14px; font-size: 0.8rem; color: #6b6358; text-decoration: none; font-weight: 500; }
+body.dark .lock-back { color: #7a748a; }
+
+/* ── App ──────────────────────────────────────────────── */
+#app { display: none; }
+.back-link { text-align: center; margin-bottom: 16px; }
+.back-link a { font-size: 0.78rem; color: #6b6358; text-decoration: none; font-weight: 600; }
+body.dark .back-link a { color: #7a748a; }
+
+/* ── Header ───────────────────────────────────────────── */
+.header { text-align: center; margin-bottom: 20px; }
+.header h1 { font-family: ‘Bebas Neue’, sans-serif; font-size: clamp(2rem,8vw,3rem); letter-spacing: 3px; color: #0f3a99; line-height: 1; }
+body.dark .header h1 { color: #6b9fff; }
+.header-meta { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.badge { display: inline-block; border-radius: 20px; padding: 5px 12px; font-size: 0.7rem; letter-spacing: 0.5px; font-weight: 600; border: 1.5px solid #d4cfc6; color: #6b6358; background: #ffffff; }
+body.dark .badge { border-color: #2e2a3a; color: #7a748a; background: #1a1820; }
+.badge.contact { border-color: #1a56db; color: #0f3a99; background: #e8eeff; }
+body.dark .badge.contact { border-color: #6b9fff; color: #6b9fff; background: rgba(107,159,255,0.1); }
+.dark-btn { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.75rem; color: #6b6358; font-weight: 700; padding: 5px 12px; border-radius: 20px; border: 1.5px solid #d4cfc6; background-color: #ffffff; min-height: 32px; -webkit-appearance: none; appearance: none; }
+body.dark .dark-btn { color: #7a748a; border-color: #2e2a3a; background-color: #1a1820; }
+
+/* ── Tabs ─────────────────────────────────────────────── */
+.tabs { display: flex; gap: 5px; margin-bottom: 18px; background: #ffffff; border-radius: 14px; padding: 5px; border: 1.5px solid #d4cfc6; }
+body.dark .tabs { background: #1a1820; border-color: #2e2a3a; }
+.tab { flex: 1; padding: 10px 2px; border-radius: 9px; border: none; background: transparent; color: #6b6358; font-family: ‘DM Sans’, sans-serif; font-size: 0.72rem; font-weight: 700; cursor: pointer; min-height: 44px; -webkit-appearance: none; appearance: none; line-height: 1.2; }
+body.dark .tab { color: #7a748a; }
+.tab.active { background-color: #1a56db; color: #ffffff; }
+body.dark .tab.active { background-color: #4d84ff; }
+.tab.active.sale-tab { background-color: #d4780a; }
+body.dark .tab.active.sale-tab { background-color: #ffaa32; color: #1a1714; }
+.tab:not(.active):active { background: #f7f5f0; }
+body.dark .tab:not(.active):active { background: #221f2b; }
+
+/* ── Cards ────────────────────────────────────────────── */
+.section-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: #6b6358; margin-bottom: 10px; font-weight: 700; }
+body.dark .section-label { color: #7a748a; }
+.card { background: #ffffff; border: 1.5px solid #d4cfc6; border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+body.dark .card { background: #1a1820; border-color: #2e2a3a; }
+
+/* ── Inputs ───────────────────────────────────────────── */
+.input-stack { display: flex; flex-direction: column; gap: 10px; }
+.input-row-two { display: grid; grid-template-columns: 1fr 100px; gap: 8px; }
+.field label { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: #6b6358; margin-bottom: 5px; font-weight: 700; }
+body.dark .field label { color: #7a748a; }
+.field input { width: 100%; background: #f7f5f0; border: 1.5px solid #d4cfc6; border-radius: 10px; padding: 12px 12px; color: #1a1714; font-family: ‘DM Sans’, sans-serif; font-size: 16px; font-weight: 500; outline: none; -webkit-appearance: none; appearance: none; }
+body.dark .field input { background: #221f2b; border-color: #2e2a3a; color: #e8e4f0; }
+.field input::placeholder { color: #a09890; }
+.field input:focus { border-color: #1a56db; }
+body.dark .field input:focus { border-color: #6b9fff; }
+.field input[type=“number”] { text-align: right; -moz-appearance: textfield; }
+input[type=“number”]::-webkit-inner-spin-button, input[type=“number”]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* ── Buttons ──────────────────────────────────────────── */
+.btn-primary { display: block; width: 100%; padding: 13px 20px; background-color: #1a56db; color: #ffffff; border: none; border-radius: 10px; font-family: ‘DM Sans’, sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; min-height: 48px; -webkit-appearance: none; appearance: none; }
+body.dark .btn-primary { background-color: #4d84ff; }
+.btn-primary:active { background-color: #0f3a99; }
+body.dark .btn-primary:active { background-color: #2a5cc4; }
+.btn-primary.amber { background-color: #d4780a; }
+body.dark .btn-primary.amber { background-color: #e8890f; }
+.btn-primary.amber:active { background-color: #92540a; }
+.btn-ghost { width: 100%; padding: 12px; background: transparent; border: 1.5px solid #a09890; border-radius: 10px; color: #6b6358; font-family: ‘DM Sans’, sans-serif; font-weight: 600; font-size: 0.85rem; cursor: pointer; min-height: 44px; -webkit-appearance: none; appearance: none; }
+body.dark .btn-ghost { border-color: #4a4558; color: #7a748a; }
+.btn-ghost:active { border-color: #c0392b; color: #c0392b; background: #fdecea; }
+
+/* ── Item rows ────────────────────────────────────────── */
+.items-list { display: flex; flex-direction: column; gap: 8px; }
+.item-row { display: flex; align-items: center; gap: 8px; background: #f7f5f0; border-radius: 9px; padding: 10px 12px; border: 1.5px solid #d4cfc6; }
+body.dark .item-row { background: #221f2b; border-color: #2e2a3a; }
+.item-badge { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; padding: 3px 7px; border-radius: 20px; font-weight: 700; flex-shrink: 0; }
+.item-badge.buy { background: #e6f5ec; color: #0d7a3e; border: 1px solid #0d7a3e; }
+.item-badge.trade { background: #e8eeff; color: #0f3a99; border: 1px solid #1a56db; }
+.item-badge.sale { background: #fff4e6; color: #92540a; border: 1px solid #d4780a; }
+body.dark .item-badge.buy { background: rgba(46,232,160,0.1); color: #2ee8a0; border-color: #2ee8a0; }
+body.dark .item-badge.trade { background: rgba(107,159,255,0.1); color: #6b9fff; border-color: #6b9fff; }
+body.dark .item-badge.sale { background: rgba(255,165,50,0.12); color: #ffaa32; border-color: #ffaa32; }
+.item-name { flex: 1; font-size: 0.88rem; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item-market { font-size: 0.78rem; color: #6b6358; flex-shrink: 0; font-weight: 500; }
+body.dark .item-market { color: #7a748a; }
+.item-profit { font-size: 0.85rem; font-weight: 700; flex-shrink: 0; }
+.item-profit.pos { color: #0d7a3e; }
+.item-profit.neg { color: #c0392b; }
+body.dark .item-profit.pos { color: #2ee8a0; }
+body.dark .item-profit.neg { color: #ff6b7a; }
+.btn-del { background: none; border: none; color: #a09890; cursor: pointer; font-size: 1rem; padding: 4px 6px; flex-shrink: 0; min-height: 36px; min-width: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; -webkit-appearance: none; appearance: none; }
+.btn-del:active { background: #fdecea; color: #c0392b; }
+.empty-state { text-align: center; padding: 22px; color: #6b6358; font-size: 0.85rem; }
+body.dark .empty-state { color: #7a748a; }
+
+/* ── Totals ───────────────────────────────────────────── */
+.totals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.totals-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+.totals-grid.four { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.total-box { background: #f7f5f0; border-radius: 10px; padding: 12px 14px; border: 1.5px solid #d4cfc6; }
+body.dark .total-box { background: #221f2b; border-color: #2e2a3a; }
+.total-box .tl { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1.5px; color: #6b6358; margin-bottom: 4px; font-weight: 700; }
+body.dark .total-box .tl { color: #7a748a; }
+.total-box .tv { font-family: ‘Bebas Neue’, sans-serif; font-size: 1.5rem; letter-spacing: 1px; color: #1a1714; }
+body.dark .total-box .tv { color: #e8e4f0; }
+.total-box.blue-b { border-color: #1a56db; background: #e8eeff; }
+.total-box.blue-b .tv { color: #0f3a99; }
+body.dark .total-box.blue-b { border-color: #4d84ff; background: rgba(107,159,255,0.1); }
+body.dark .total-box.blue-b .tv { color: #6b9fff; }
+.total-box.green-b { border-color: #0d7a3e; background: #e6f5ec; }
+.total-box.green-b .tv { color: #0d7a3e; }
+body.dark .total-box.green-b { border-color: #2ee8a0; background: rgba(46,232,160,0.1); }
+body.dark .total-box.green-b .tv { color: #2ee8a0; }
+.total-box.amber-b { border-color: #d4780a; background: #fff4e6; }
+.total-box.amber-b .tv { color: #92540a; }
+body.dark .total-box.amber-b { border-color: #ffaa32; background: rgba(255,165,50,0.1); }
+body.dark .total-box.amber-b .tv { color: #ffaa32; }
+.total-box.red-b { border-color: #c0392b; background: #fdecea; }
+.total-box.red-b .tv { color: #c0392b; }
+
+/* ── Offer tier rows ──────────────────────────────────── */
+.offer-tier-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #d4cfc6; }
+body.dark .offer-tier-row { border-bottom-color: #2e2a3a; }
+.offer-tier-row:last-child { border-bottom: none; }
+.tier-pct { font-size: 0.82rem; color: #6b6358; font-weight: 700; min-width: 36px; }
+body.dark .tier-pct { color: #7a748a; }
+.tier-bar-wrap { flex: 1; height: 5px; background: #d4cfc6; border-radius: 3px; overflow: hidden; }
+body.dark .tier-bar-wrap { background: #2e2a3a; }
+.tier-bar { height: 100%; border-radius: 3px; background-color: #1a56db; }
+body.dark .tier-bar { background-color: #4d84ff; }
+.tier-amt { font-family: ‘Bebas Neue’, sans-serif; font-size: 1.15rem; letter-spacing: 0.5px; color: #0f3a99; min-width: 72px; text-align: right; }
+body.dark .tier-amt { color: #6b9fff; }
+
+/* Custom % input row */
+.custom-tier-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; }
+.custom-pct-wrap { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.custom-pct-input {
+width: 54px; background: #f7f5f0; border: 1.5px solid #1a56db;
+border-radius: 8px; padding: 5px 8px; color: #0f3a99;
+font-family: ‘DM Sans’, sans-serif; font-size: 0.85rem; font-weight: 700;
+text-align: center; outline: none; -webkit-appearance: none; appearance: none;
+-moz-appearance: textfield;
+}
+body.dark .custom-pct-input { background: #221f2b; border-color: #4d84ff; color: #6b9fff; }
+.custom-pct-input:focus { background: #e8eeff; }
+.custom-pct-input::placeholder { color: #a09890; font-weight: 500; }
+body.dark .custom-pct-input::placeholder { color: #4a4558; }
+body.dark .custom-pct-input:focus { background: rgba(107,159,255,0.15); }
+.custom-pct-input::-webkit-inner-spin-button,
+.custom-pct-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.custom-pct-symbol { font-size: 0.82rem; color: #1a56db; font-weight: 700; }
+body.dark .custom-pct-symbol { color: #4d84ff; }
+
+/* ── Big stat ─────────────────────────────────────────── */
+.big-stat { background: #e8eeff; border: 1.5px solid #1a56db; border-radius: 12px; padding: 16px; margin-top: 10px; }
+body.dark .big-stat { background: rgba(107,159,255,0.1); border-color: #4d84ff; }
+.big-stat.amber { background: #fff4e6; border-color: #d4780a; }
+body.dark .big-stat.amber { background: rgba(255,165,50,0.1); border-color: #ffaa32; }
+.big-stat .tl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: #6b6358; margin-bottom: 4px; font-weight: 700; }
+body.dark .big-stat .tl { color: #7a748a; }
+.big-stat .tv { font-family: ‘Bebas Neue’, sans-serif; font-size: 2rem; letter-spacing: 1px; color: #0f3a99; }
+body.dark .big-stat .tv { color: #6b9fff; }
+.big-stat.amber .tv { color: #92540a; }
+body.dark .big-stat.amber .tv { color: #ffaa32; }
+
+/* ── Tax ──────────────────────────────────────────────── */
+.sep { height: 1px; background: #d4cfc6; margin: 14px 0; }
+body.dark .sep { background: #2e2a3a; }
+.tax-row { display: flex; align-items: center; gap: 12px; }
+.tax-row .field { flex: 1; }
+.tax-toggle-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; min-height: 44px; flex-shrink: 0; }
+.tax-toggle-label { font-size: 0.82rem; color: #3d3830; font-weight: 600; white-space: nowrap; }
+body.dark .tax-toggle-label { color: #c8c2d8; }
+.toggle-sw { width: 44px; height: 26px; border-radius: 13px; background-color: #a09890; position: relative; transition: background-color 0.2s; flex-shrink: 0; cursor: pointer; }
+body.dark .toggle-sw { background-color: #4a4558; }
+.toggle-sw::after { content: ‘’; position: absolute; width: 20px; height: 20px; border-radius: 50%; background-color: #ffffff; top: 3px; left: 3px; transition: left 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+.toggle-sw.on { background-color: #1a56db; }
+body.dark .toggle-sw.on { background-color: #4d84ff; }
+.toggle-sw.on::after { left: 21px; }
+
+/* ── Summary ──────────────────────────────────────────── */
+.stat-strip { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.summary-section-title { font-family: ‘Bebas Neue’, sans-serif; font-size: 1rem; letter-spacing: 2px; color: #6b6358; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1.5px solid #d4cfc6; }
+body.dark .summary-section-title { color: #7a748a; border-color: #2e2a3a; }
+
+/* ── Transaction log ──────────────────────────────────── */
+.txn-group { margin-bottom: 20px; }
+.txn-group-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1.5px solid #d4cfc6; flex-wrap: wrap; gap: 4px; }
+body.dark .txn-group-header { border-color: #2e2a3a; }
+.txn-group-date { font-family: ‘Bebas Neue’, sans-serif; font-size: 1.05rem; letter-spacing: 1px; color: #1a1714; }
+body.dark .txn-group-date { color: #e8e4f0; }
+.txn-group-meta { font-size: 0.7rem; color: #6b6358; font-weight: 500; }
+body.dark .txn-group-meta { color: #7a748a; }
+.txn-row { display: flex; align-items: center; gap: 7px; padding: 9px 12px; border-radius: 8px; background: #f7f5f0; border: 1.5px solid #d4cfc6; margin-bottom: 6px; }
+body.dark .txn-row { background: #221f2b; border-color: #2e2a3a; }
+.txn-badge { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; padding: 2px 7px; border-radius: 20px; font-weight: 700; flex-shrink: 0; }
+.txn-badge.buy { background: #e6f5ec; color: #0d7a3e; border: 1px solid #0d7a3e; }
+.txn-badge.trade { background: #e8eeff; color: #0f3a99; border: 1px solid #1a56db; }
+.txn-badge.sale { background: #fff4e6; color: #92540a; border: 1px solid #d4780a; }
+body.dark .txn-badge.buy { background: rgba(46,232,160,0.1); color: #2ee8a0; border-color: #2ee8a0; }
+body.dark .txn-badge.trade { background: rgba(107,159,255,0.1); color: #6b9fff; border-color: #6b9fff; }
+body.dark .txn-badge.sale { background: rgba(255,165,50,0.12); color: #ffaa32; border-color: #ffaa32; }
+.txn-name { flex: 1; font-size: 0.85rem; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.txn-time { font-size: 0.65rem; color: #6b6358; flex-shrink: 0; }
+body.dark .txn-time { color: #7a748a; }
+.txn-v { font-size: 0.78rem; color: #6b6358; flex-shrink: 0; font-weight: 500; }
+body.dark .txn-v { color: #7a748a; }
+.txn-profit { font-size: 0.82rem; font-weight: 700; flex-shrink: 0; }
+.txn-profit.pos { color: #0d7a3e; }
+.txn-profit.neg { color: #c0392b; }
+body.dark .txn-profit.pos { color: #2ee8a0; }
+body.dark .txn-profit.neg { color: #ff6b7a; }
+.btn-txn-del { background: none; border: none; color: #a09890; cursor: pointer; font-size: 0.9rem; padding: 4px 6px; flex-shrink: 0; min-height: 36px; min-width: 30px; display: flex; align-items: center; justify-content: center; border-radius: 6px; -webkit-appearance: none; appearance: none; }
+.btn-txn-del:active { background: #fdecea; color: #c0392b; }
+
+@media (min-width: 540px) { body { max-width: 480px; margin: 0 auto; } }
+@media (max-width: 380px) { .stat-strip { grid-template-columns: 1fr 1fr; } }
+</style>
+
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+
+<div id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-icon">🎴</div>
+    <h2>Show Tracker</h2>
+    <p>Enter your phone number or email to access your tracker.</p>
+    <div class="lock-inputs">
+      <input type="tel" id="lock-phone" placeholder="📱 Phone number" inputmode="tel" autocomplete="tel" />
+      <div class="input-or">or</div>
+      <input type="email" id="lock-email" placeholder="✉️ Email address" inputmode="email" autocomplete="email" />
+    </div>
+    <button class="btn-primary" onclick="tryUnlock()">Enter Tracker →</button>
+    <div class="lock-fine">Enter whichever you signed up with</div>
+    <a class="lock-back" href="index.html">← Back to free calculator</a>
+  </div>
+</div>
+
+<!-- APP -->
+
+<div id="app">
+  <div class="back-link"><a href="index.html">← Free Calculator</a></div>
+
+  <div class="header">
+    <h1>Show Tracker</h1>
+    <div class="header-meta">
+      <span class="badge" id="today-badge"></span>
+      <span class="badge contact" id="user-badge"></span>
+      <button class="dark-btn" onclick="toggleDark()" id="dark-btn">
+        <span id="dark-icon">🌙</span>
+        <span id="dark-label">Dark</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="setTab('buy')">💳 Buy</button>
+    <button class="tab" onclick="setTab('trade')">🔄 Trade</button>
+    <button class="tab sale-tab" onclick="setTab('sale')">💰 Sale</button>
+    <button class="tab" onclick="setTab('summary')">📊 Summary</button>
+  </div>
+
+  <!-- BUY TAB -->
+
+  <div id="tab-buy">
+    <div class="card">
+      <div class="section-label">Log a Buy</div>
+      <div class="input-stack">
+        <div class="input-row-two">
+          <div class="field">
+            <label>Card Name</label>
+            <input type="text" id="buy-name" placeholder="e.g. Charizard Holo" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" />
+          </div>
+          <div class="field">
+            <label>Market $</label>
+            <input type="number" id="buy-price" placeholder="0.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+        <button class="btn-primary" onclick="logItem('buy')">+ Log Buy</button>
+      </div>
+    </div>
+
+```
+<div class="card">
+  <div class="section-label">Today's Buys</div>
+  <div class="items-list" id="buy-list"><div class="empty-state">No buys logged today</div></div>
+</div>
+
+<div class="card">
+  <div class="section-label">Buy Totals — Today</div>
+  <div class="totals-grid">
+    <div class="total-box blue-b"><div class="tl">Market Value</div><div class="tv" id="buy-market">$0.00</div></div>
+    <div class="total-box"><div class="tl">Cards</div><div class="tv" id="buy-count">0</div></div>
+  </div>
+  <div class="section-label" style="margin-top:4px">Offer Tiers — Today's Buys</div>
+  <div class="offer-tier-row"><span class="tier-pct">70%</span><div class="tier-bar-wrap"><div class="tier-bar" style="width:70%"></div></div><span class="tier-amt" id="buy-70">$0.00</span></div>
+  <div class="offer-tier-row"><span class="tier-pct">80%</span><div class="tier-bar-wrap"><div class="tier-bar" style="width:80%"></div></div><span class="tier-amt" id="buy-80">$0.00</span></div>
+  <div class="offer-tier-row"><span class="tier-pct">90%</span><div class="tier-bar-wrap"><div class="tier-bar" style="width:90%"></div></div><span class="tier-amt" id="buy-90">$0.00</span></div>
+  <div class="custom-tier-row">
+    <div class="custom-pct-wrap">
+      <input type="number" class="custom-pct-input" id="buy-custom-pct" placeholder="75" min="1" max="200" step="1" inputmode="numeric" oninput="updateTotals('buy')" />
+      <span class="custom-pct-symbol">%</span>
+    </div>
+    <div class="tier-bar-wrap"><div class="tier-bar" id="buy-custom-bar" style="width:75%"></div></div>
+    <span class="tier-amt" id="buy-custom">$0.00</span>
+  </div>
+  <div class="sep"></div>
+  <div class="section-label">Sales Tax</div>
+  <div class="tax-row">
+    <div class="field">
+      <label>Tax Rate %</label>
+      <input type="number" id="buy-tax-rate" value="8" min="0" max="30" step="0.1" inputmode="decimal" oninput="updateTotals('buy')" />
+    </div>
+    <div class="tax-toggle-wrap" onclick="toggleTax()">
+      <div class="toggle-sw" id="buy-tax-toggle"></div>
+      <span class="tax-toggle-label">Apply Tax</span>
+    </div>
+  </div>
+  <div id="buy-tax-result" style="display:none; margin-top:12px;">
+    <div class="totals-grid">
+      <div class="total-box"><div class="tl">Tax Amount</div><div class="tv" id="buy-tax-amt" style="color:#c0392b">$0.00</div></div>
+      <div class="total-box green-b"><div class="tl">80% + Tax</div><div class="tv" id="buy-with-tax">$0.00</div></div>
+    </div>
+  </div>
+</div>
+<button class="btn-ghost" onclick="clearToday('buy')">✕ Clear Today's Buy List</button>
+```
+
+  </div>
+
+  <!-- TRADE TAB -->
+
+  <div id="tab-trade" style="display:none">
+    <div class="card">
+      <div class="section-label">Log a Trade</div>
+      <div class="input-stack">
+        <div class="input-row-two">
+          <div class="field">
+            <label>Card Name</label>
+            <input type="text" id="trade-name" placeholder="e.g. Luffy Alt Art" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" />
+          </div>
+          <div class="field">
+            <label>Market $</label>
+            <input type="number" id="trade-price" placeholder="0.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+        <button class="btn-primary" onclick="logItem('trade')">+ Log Trade</button>
+      </div>
+    </div>
+
+```
+<div class="card">
+  <div class="section-label">Today's Trades</div>
+  <div class="items-list" id="trade-list"><div class="empty-state">No trades logged today</div></div>
+</div>
+
+<div class="card">
+  <div class="section-label">Trade Totals — Today</div>
+  <div class="totals-grid">
+    <div class="total-box blue-b"><div class="tl">Market Value</div><div class="tv" id="trade-market">$0.00</div></div>
+    <div class="total-box"><div class="tl">Cards</div><div class="tv" id="trade-count">0</div></div>
+  </div>
+  <div class="section-label" style="margin-top:4px">Offer Tiers — Today's Trades</div>
+  <div class="offer-tier-row"><span class="tier-pct">70%</span><div class="tier-bar-wrap"><div class="tier-bar" style="width:70%"></div></div><span class="tier-amt" id="trade-70">$0.00</span></div>
+  <div class="offer-tier-row"><span class="tier-pct">80%</span><div class="tier-bar-wrap"><div class="tier-bar" style="width:80%"></div></div><span class="tier-amt" id="trade-80">$0.00</span></div>
+  <div class="offer-tier-row"><span class="tier-pct">90%</span><div class="tier-bar-wrap"><div class="tier-bar" style="width:90%"></div></div><span class="tier-amt" id="trade-90">$0.00</span></div>
+  <div class="custom-tier-row">
+    <div class="custom-pct-wrap">
+      <input type="number" class="custom-pct-input" id="trade-custom-pct" placeholder="75" min="1" max="200" step="1" inputmode="numeric" oninput="updateTotals('trade')" />
+      <span class="custom-pct-symbol">%</span>
+    </div>
+    <div class="tier-bar-wrap"><div class="tier-bar" id="trade-custom-bar" style="width:75%"></div></div>
+    <span class="tier-amt" id="trade-custom">$0.00</span>
+  </div>
+</div>
+<button class="btn-ghost" onclick="clearToday('trade')">✕ Clear Today's Trades</button>
+```
+
+  </div>
+
+  <!-- SALE TAB -->
+
+  <div id="tab-sale" style="display:none">
+    <div class="card">
+      <div class="section-label">Log a Sale</div>
+      <div class="input-stack">
+        <div class="field">
+          <label>Card Name</label>
+          <input type="text" id="sale-name" placeholder="e.g. Pikachu VMAX" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" />
+        </div>
+        <div class="input-row-two">
+          <div class="field">
+            <label>Sale Price $</label>
+            <input type="number" id="sale-price" placeholder="0.00" min="0" step="0.01" inputmode="decimal" oninput="updateSaleProfit()" />
+          </div>
+          <div class="field">
+            <label>Cost Basis $</label>
+            <input type="number" id="sale-cost" placeholder="0.00" min="0" step="0.01" inputmode="decimal" oninput="updateSaleProfit()" />
+          </div>
+        </div>
+        <div id="sale-profit-preview" style="display:none; padding:10px 14px; border-radius:10px; text-align:center; font-weight:700; font-size:0.9rem;"></div>
+        <button class="btn-primary amber" onclick="logSale()">+ Log Sale</button>
+      </div>
+    </div>
+
+```
+<div class="card">
+  <div class="section-label">Today's Sales</div>
+  <div class="items-list" id="sale-list"><div class="empty-state">No sales logged today</div></div>
+</div>
+
+<div class="card">
+  <div class="section-label">Sale Totals — Today</div>
+  <div class="totals-grid three">
+    <div class="total-box amber-b"><div class="tl">Revenue</div><div class="tv" id="sale-revenue">$0.00</div></div>
+    <div class="total-box"><div class="tl">Cost Basis</div><div class="tv" id="sale-cost-total">$0.00</div></div>
+    <div class="total-box" id="sale-profit-box"><div class="tl">Profit</div><div class="tv" id="sale-profit-total">$0.00</div></div>
+  </div>
+  <div class="big-stat amber">
+    <div class="tl">Total Profit — Today's Sales</div>
+    <div class="tv" id="sale-profit-big">$0.00</div>
+  </div>
+</div>
+<button class="btn-ghost" onclick="clearToday('sale')">✕ Clear Today's Sales</button>
+```
+
+  </div>
+
+  <!-- SUMMARY TAB -->
+
+  <div id="tab-summary" style="display:none">
+    <div class="card">
+      <div class="section-label">All-Time Stats</div>
+      <div class="stat-strip">
+        <div class="total-box blue-b"><div class="tl">Buys</div><div class="tv" id="sum-buys">0</div></div>
+        <div class="total-box green-b"><div class="tl">Trades</div><div class="tv" id="sum-trades">0</div></div>
+        <div class="total-box amber-b"><div class="tl">Sales</div><div class="tv" id="sum-sales">0</div></div>
+        <div class="total-box"><div class="tl">Shows</div><div class="tv" id="sum-days">0</div></div>
+      </div>
+    </div>
+
+```
+<div class="card">
+  <div class="summary-section-title">💳 Buys & 🔄 Trades</div>
+  <div class="totals-grid">
+    <div class="total-box blue-b"><div class="tl">Market Value In</div><div class="tv" id="sum-market">$0.00</div></div>
+    <div class="total-box green-b"><div class="tl">Total Cards</div><div class="tv" id="sum-cards">0</div></div>
+  </div>
+  <div class="big-stat">
+    <div class="tl">All-Time Market Value</div>
+    <div class="tv" id="sum-margin">$0.00</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="summary-section-title">💰 Sales</div>
+  <div class="totals-grid three">
+    <div class="total-box amber-b"><div class="tl">Revenue</div><div class="tv" id="sum-revenue">$0.00</div></div>
+    <div class="total-box"><div class="tl">Cost Basis</div><div class="tv" id="sum-cost">$0.00</div></div>
+    <div class="total-box" id="sum-profit-box"><div class="tl">Profit</div><div class="tv" id="sum-profit">$0.00</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-label">Transaction Log</div>
+  <div id="txn-log"><div class="empty-state">No transactions yet</div></div>
+</div>
+<button class="btn-ghost" onclick="clearAllTxns()">✕ Clear All History</button>
+```
+
+  </div>
+</div>
+
+<script>
+  let buyTaxOn = false;
+  let idCtr = Date.now();
+  let darkMode = false;
+
+  function getTxns() { try { return JSON.parse(localStorage.getItem('csc_txns')||'[]'); } catch(e) { return []; } }
+  function setTxns(t) { localStorage.setItem('csc_txns', JSON.stringify(t)); }
+  function getSales() { try { return JSON.parse(localStorage.getItem('csc_sales')||'[]'); } catch(e) { return []; } }
+  function setSales(s) { localStorage.setItem('csc_sales', JSON.stringify(s)); }
+
+  function fmt(n) { return '$'+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+  function fmtSigned(n) { return (n>=0?'+':'-')+'$'+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function todayStr() { return new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}); }
+  function nowStr() { return new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
+  function dayKey() { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+
+  // ── Dark mode ─────────────────────────────────────────────────
+  function toggleDark() {
+    darkMode = !darkMode;
+    document.body.classList.toggle('dark', darkMode);
+    document.getElementById('dark-icon').textContent = darkMode ? '☀️' : '🌙';
+    document.getElementById('dark-label').textContent = darkMode ? 'Light' : 'Dark';
+    localStorage.setItem('csc_dark', darkMode ? '1' : '0');
+  }
+  // Load saved preference — but default is LIGHT (body starts without .dark)
+  if (localStorage.getItem('csc_dark') === '1') {
+    darkMode = true;
+    document.body.classList.add('dark');
+  }
+
+  // ── Lock ──────────────────────────────────────────────────────
+  function tryUnlock() {
+    const phone = document.getElementById('lock-phone').value.trim();
+    const email = document.getElementById('lock-email').value.trim();
+    const phoneValid = phone.replace(/\D/g,'').length >= 10;
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!phoneValid && !emailValid) {
+      const el = document.getElementById('lock-phone');
+      el.style.borderColor='#c0392b';
+      setTimeout(()=>el.style.borderColor='#d4cfc6',1500);
+      return;
+    }
+    if (phoneValid) localStorage.setItem('csc_phone', phone);
+    if (emailValid) localStorage.setItem('csc_email', email);
+    localStorage.setItem('csc_unlocked','1');
+    launch();
+  }
+
+  function launch() {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    const phone = localStorage.getItem('csc_phone');
+    const email = localStorage.getItem('csc_email');
+    document.getElementById('today-badge').textContent = todayStr();
+    document.getElementById('user-badge').textContent = phone ? '📱 '+phone : '✉️ '+(email||'');
+    document.getElementById('dark-icon').textContent = darkMode ? '☀️' : '🌙';
+    document.getElementById('dark-label').textContent = darkMode ? 'Light' : 'Dark';
+    renderTabList('buy'); renderTabList('trade'); renderSaleList();
+    updateTotals('buy'); updateTotals('trade'); updateSaleTotals();
+  }
+
+  if (localStorage.getItem('csc_unlocked') === '1') {
+    window.addEventListener('DOMContentLoaded', launch);
+  }
+
+  // ── Tabs ──────────────────────────────────────────────────────
+  function setTab(tab) {
+    ['buy','trade','sale','summary'].forEach(t => document.getElementById('tab-'+t).style.display = t===tab?'block':'none');
+    document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', ['buy','trade','sale','summary'][i]===tab));
+    if (tab==='summary') renderSummary();
+  }
+
+  // ── Log buy/trade directly (no picker) ───────────────────────
+  function logItem(type) {
+    const nEl = document.getElementById(type+'-name');
+    const pEl = document.getElementById(type+'-price');
+    const name = nEl.value.trim(), price = parseFloat(pEl.value);
+    if (!name) { nEl.style.borderColor='#c0392b'; setTimeout(()=>nEl.style.borderColor='#d4cfc6',1200); return; }
+    if (!price||price<=0) { pEl.style.borderColor='#c0392b'; setTimeout(()=>pEl.style.borderColor='#d4cfc6',1200); return; }
+    const txns = getTxns();
+    txns.push({id:++idCtr, name, price, type, time:nowStr(), dayKey:dayKey(), dayLabel:todayStr()});
+    setTxns(txns);
+    nEl.value = ''; pEl.value = '';
+    nEl.focus();
+    renderTabList(type); updateTotals(type);
+  }
+
+  // ── Remove buy/trade ──────────────────────────────────────────
+  function removeTxn(id) {
+    setTxns(getTxns().filter(t=>t.id!==id));
+    renderTabList('buy'); renderTabList('trade');
+    updateTotals('buy'); updateTotals('trade');
+    renderSummary();
+  }
+
+  // ── Render tab lists ──────────────────────────────────────────
+  function renderTabList(type) {
+    const el = document.getElementById(type+'-list');
+    const items = getTxns().filter(t=>t.type===type&&t.dayKey===dayKey());
+    if (!items.length) { el.innerHTML=`<div class="empty-state">No ${type}s logged today</div>`; return; }
+    el.innerHTML = items.map(t=>`
+      <div class="item-row">
+        <span class="item-badge ${t.type}">${t.type}</span>
+        <span class="item-name">${esc(t.name)}</span>
+        <span class="item-market">${fmt(t.price)}</span>
+        <button class="btn-del" onclick="removeTxn(${t.id})">✕</button>
+      </div>`).join('');
+  }
+
+  // ── Update totals with 70/80/90 + custom % ───────────────────
+  function updateTotals(type) {
+    const items = getTxns().filter(t=>t.type===type&&t.dayKey===dayKey());
+    const market = items.reduce((s,t)=>s+t.price,0);
+    const count = items.length;
+
+    if (type==='buy') {
+      document.getElementById('buy-market').textContent = fmt(market);
+      document.getElementById('buy-count').textContent = count;
+      [70,80,90].forEach(pct => document.getElementById('buy-'+pct).textContent = fmt(market*pct/100));
+      const customPct = Math.max(1, parseFloat(document.getElementById('buy-custom-pct').value)||75);
+      document.getElementById('buy-custom').textContent = fmt(market*customPct/100);
+      document.getElementById('buy-custom-bar').style.width = Math.min(customPct,100)+'%';
+      // Tax on 80%
+      const rate = parseFloat(document.getElementById('buy-tax-rate').value)||0;
+      const base80 = market * 0.80;
+      document.getElementById('buy-tax-amt').textContent = fmt(buyTaxOn ? base80*rate/100 : 0);
+      document.getElementById('buy-with-tax').textContent = fmt(base80 + (buyTaxOn ? base80*rate/100 : 0));
+    } else {
+      document.getElementById('trade-market').textContent = fmt(market);
+      document.getElementById('trade-count').textContent = count;
+      [70,80,90].forEach(pct => document.getElementById('trade-'+pct).textContent = fmt(market*pct/100));
+      const customPct = Math.max(1, parseFloat(document.getElementById('trade-custom-pct').value)||75);
+      document.getElementById('trade-custom').textContent = fmt(market*customPct/100);
+      document.getElementById('trade-custom-bar').style.width = Math.min(customPct,100)+'%';
+    }
+  }
+
+  function toggleTax() {
+    buyTaxOn = !buyTaxOn;
+    document.getElementById('buy-tax-toggle').classList.toggle('on', buyTaxOn);
+    document.getElementById('buy-tax-result').style.display = buyTaxOn ? 'block' : 'none';
+    updateTotals('buy');
+  }
+
+  // ── Sales ─────────────────────────────────────────────────────
+  function updateSaleProfit() {
+    const price = parseFloat(document.getElementById('sale-price').value)||0;
+    const cost = parseFloat(document.getElementById('sale-cost').value)||0;
+    const prev = document.getElementById('sale-profit-preview');
+    if (price>0||cost>0) {
+      const profit = price-cost; const isPos = profit>=0;
+      prev.style.display='block';
+      prev.style.background = isPos?'#e6f5ec':'#fdecea';
+      prev.style.color = isPos?'#0d7a3e':'#c0392b';
+      prev.style.border = `1.5px solid ${isPos?'#0d7a3e':'#c0392b'}`;
+      prev.style.borderRadius = '10px';
+      prev.textContent = `Profit: ${fmtSigned(profit)}`;
+    } else { prev.style.display='none'; }
+  }
+
+  function logSale() {
+    const nEl=document.getElementById('sale-name'),pEl=document.getElementById('sale-price'),cEl=document.getElementById('sale-cost');
+    const name=nEl.value.trim(),salePrice=parseFloat(pEl.value),cost=parseFloat(cEl.value)||0;
+    let err=false;
+    if (!name){nEl.style.borderColor='#c0392b';setTimeout(()=>nEl.style.borderColor='#d4cfc6',1200);err=true;}
+    if (!salePrice||salePrice<=0){pEl.style.borderColor='#c0392b';setTimeout(()=>pEl.style.borderColor='#d4cfc6',1200);err=true;}
+    if (err) return;
+    const profit = +(salePrice-cost).toFixed(2);
+    const sales = getSales();
+    sales.push({id:++idCtr,name,salePrice,cost,profit,time:nowStr(),dayKey:dayKey(),dayLabel:todayStr()});
+    setSales(sales);
+    nEl.value='';pEl.value='';cEl.value='';
+    document.getElementById('sale-profit-preview').style.display='none';
+    nEl.focus();
+    renderSaleList(); updateSaleTotals();
+  }
+
+  function removeSale(id) {
+    setSales(getSales().filter(s=>s.id!==id));
+    renderSaleList(); updateSaleTotals(); renderSummary();
+  }
+
+  function renderSaleList() {
+    const el=document.getElementById('sale-list');
+    const items=getSales().filter(s=>s.dayKey===dayKey());
+    if (!items.length){el.innerHTML='<div class="empty-state">No sales logged today</div>';return;}
+    el.innerHTML=items.map(s=>{
+      const pos=s.profit>=0;
+      return `<div class="item-row">
+        <span class="item-badge sale">sale</span>
+        <span class="item-name">${esc(s.name)}</span>
+        <span class="item-market">cost ${fmt(s.cost)}</span>
+        <span class="item-market">${fmt(s.salePrice)}</span>
+        <span class="item-profit ${pos?'pos':'neg'}">${fmtSigned(s.profit)}</span>
+        <button class="btn-del" onclick="removeSale(${s.id})">✕</button>
+      </div>`;
+    }).join('');
+  }
+
+  function updateSaleTotals() {
+    const items=getSales().filter(s=>s.dayKey===dayKey());
+    const rev=items.reduce((s,i)=>s+i.salePrice,0);
+    const cost=items.reduce((s,i)=>s+i.cost,0);
+    const profit=items.reduce((s,i)=>s+i.profit,0);
+    document.getElementById('sale-revenue').textContent=fmt(rev);
+    document.getElementById('sale-cost-total').textContent=fmt(cost);
+    document.getElementById('sale-profit-total').textContent=fmt(profit);
+    document.getElementById('sale-profit-big').textContent=fmt(profit);
+    document.getElementById('sale-profit-box').className='total-box '+(profit>=0?'green-b':'red-b');
+  }
+
+  // ── Clear ─────────────────────────────────────────────────────
+  function clearToday(type) {
+    if (type==='sale') {
+      if (!getSales().filter(s=>s.dayKey===dayKey()).length) return;
+      if (!confirm("Clear today's sales?")) return;
+      setSales(getSales().filter(s=>s.dayKey!==dayKey()));
+      renderSaleList(); updateSaleTotals(); return;
+    }
+    if (!getTxns().filter(t=>t.type===type&&t.dayKey===dayKey()).length) return;
+    if (!confirm(`Clear today's ${type} entries?`)) return;
+    setTxns(getTxns().filter(t=>!(t.type===type&&t.dayKey===dayKey())));
+    renderTabList(type); updateTotals(type);
+  }
+
+  function clearAllTxns() {
+    if (!getTxns().length&&!getSales().length) return;
+    if (!confirm('Delete ALL transaction history? Cannot be undone.')) return;
+    setTxns([]); setSales([]);
+    renderTabList('buy'); renderTabList('trade'); renderSaleList();
+    updateTotals('buy'); updateTotals('trade'); updateSaleTotals();
+    renderSummary();
+  }
+
+  // ── Summary ───────────────────────────────────────────────────
+  function renderSummary() {
+    const txns=getTxns(), sales=getSales();
+    const totalMarket=txns.reduce((s,t)=>s+t.price,0);
+    const totalCards=txns.length;
+    const rev=sales.reduce((s,i)=>s+i.salePrice,0);
+    const cost=sales.reduce((s,i)=>s+i.cost,0);
+    const profit=sales.reduce((s,i)=>s+i.profit,0);
+    const days=new Set([...txns.map(t=>t.dayKey),...sales.map(s=>s.dayKey)]).size;
+
+    document.getElementById('sum-buys').textContent=txns.filter(t=>t.type==='buy').length;
+    document.getElementById('sum-trades').textContent=txns.filter(t=>t.type==='trade').length;
+    document.getElementById('sum-sales').textContent=sales.length;
+    document.getElementById('sum-days').textContent=days;
+    document.getElementById('sum-market').textContent=fmt(totalMarket);
+    document.getElementById('sum-cards').textContent=totalCards;
+    document.getElementById('sum-margin').textContent=fmt(totalMarket);
+    document.getElementById('sum-revenue').textContent=fmt(rev);
+    document.getElementById('sum-cost').textContent=fmt(cost);
+    document.getElementById('sum-profit').textContent=fmt(profit);
+    document.getElementById('sum-profit-box').className='total-box '+(profit>=0?'green-b':'red-b');
+
+    const logEl=document.getElementById('txn-log');
+    const all=[...txns.map(t=>({...t,logType:'txn'})),...sales.map(s=>({...s,type:'sale',logType:'sale'}))];
+    if (!all.length){logEl.innerHTML='<div class="empty-state">No transactions yet</div>';return;}
+    const groups={};
+    all.sort((a,b)=>b.id-a.id).forEach(item=>{
+      if (!groups[item.dayKey]) groups[item.dayKey]={label:item.dayLabel,items:[]};
+      groups[item.dayKey].items.push(item);
+    });
+    logEl.innerHTML=Object.keys(groups).sort((a,b)=>b.localeCompare(a)).map(dk=>{
+      const g=groups[dk];
+      const db=g.items.filter(i=>i.type==='buy').length;
+      const dt=g.items.filter(i=>i.type==='trade').length;
+      const ds=g.items.filter(i=>i.type==='sale').length;
+      const dayRev=g.items.filter(i=>i.type==='sale').reduce((s,i)=>s+i.salePrice,0);
+      return `<div class="txn-group">
+        <div class="txn-group-header">
+          <span class="txn-group-date">${esc(g.label)}</span>
+          <span class="txn-group-meta">${db} buy · ${dt} trade · ${ds} sale${ds?' · '+fmt(dayRev)+' rev':''}</span>
+        </div>
+        ${g.items.map(item=>{
+          if (item.logType==='sale') {
+            const pos=item.profit>=0;
+            return `<div class="txn-row">
+              <span class="txn-badge sale">sale</span>
+              <span class="txn-name">${esc(item.name)}</span>
+              <span class="txn-time">${item.time}</span>
+              <span class="txn-v">sold ${fmt(item.salePrice)}</span>
+              <span class="txn-v">cost ${fmt(item.cost)}</span>
+              <span class="txn-profit ${pos?'pos':'neg'}">${fmtSigned(item.profit)}</span>
+              <button class="btn-txn-del" onclick="removeSale(${item.id})">✕</button>
+            </div>`;
+          } else {
+            return `<div class="txn-row">
+              <span class="txn-badge ${item.type}">${item.type}</span>
+              <span class="txn-name">${esc(item.name)}</span>
+              <span class="txn-time">${item.time}</span>
+              <span class="txn-v">${fmt(item.price)}</span>
+              <button class="btn-txn-del" onclick="removeTxn(${item.id})">✕</button>
+            </div>`;
+          }
+        }).join('')}
+      </div>`;
+    }).join('');
+  }
+
+  // ── Keyboard enter ────────────────────────────────────────────
+  document.addEventListener('keydown', e=>{
+    if (e.key!=='Enter') return;
+    if (document.getElementById('lock-screen').style.display!=='none') { tryUnlock(); return; }
+    const buyVis=document.getElementById('tab-buy').style.display!=='none';
+    const tradeVis=document.getElementById('tab-trade').style.display!=='none';
+    const saleVis=document.getElementById('tab-sale').style.display!=='none';
+    if (buyVis) logItem('buy');
+    else if (tradeVis) logItem('trade');
+    else if (saleVis) logSale();
+  });
+</script>
+
+</body>
+</html>
